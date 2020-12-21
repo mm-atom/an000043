@@ -21,7 +21,7 @@ export interface IFileDoc<M> {
 
 interface IFile<M = Record<string, unknown>> extends IFileBase {
 	id?: string;
-	meta: M;
+	meta?: M;
 }
 
 export default async function up<M = Record<string, unknown>>(files: IFile<M>[]) {
