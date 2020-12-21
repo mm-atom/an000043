@@ -11,7 +11,7 @@ const minio = config.minio as ClientOptions;
 const client = new Client(minio);
 const NAME_SPACE = 'mmstudio';
 
-interface IFileDoc<M> {
+export interface IFileDoc<M> {
 	id: string
 	contentType: string
 	name: string
