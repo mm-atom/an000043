@@ -12,16 +12,16 @@ const client = new Client(minio);
 const NAME_SPACE = 'mmstudio';
 
 export interface IFileDoc<M> {
-	id: string
-	contentType: string
-	name: string
-	md5: string
-	meta: M
+	id: string;
+	contentType: string;
+	name: string;
+	md5: string;
+	meta: M;
 }
 
 interface IFile<M = Record<string, unknown>> extends IFileBase {
 	id?: string;
-	meta?: M;
+	meta: M;
 }
 
 export default async function up<M = Record<string, unknown>>(files: IFile<M>[]) {
