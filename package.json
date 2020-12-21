@@ -45,8 +45,8 @@
 		"minio": "^7.0.18"
 	},
 	"peerDependencies": {
-		"@mmstudio/config": "latest",
-		"anylogger": "latest"
+		"@mmstudio/config": "*",
+		"anylogger": "*"
 	},
 	"devDependencies": {
 		"@mmstudio/config": "latest",
