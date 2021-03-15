@@ -34,6 +34,13 @@ export default async function up<M = Record<string, unknown>>(files: IFile<M>[])
 			'content-type': file.type,
 			originialfilename: encodeURIComponent(file.name),
 		};
+		if (file.id) {
+			try {
+				await client.removeObject(NAME_SPACE, file.id);
+			} catch {
+				// file may not exist. ignore
+			}
+		}
 		const id = file.id || uuid();
 		if (file.path) {
 			// 原文件，上传的时候有存储到文件系统中

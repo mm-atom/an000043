@@ -2,6 +2,12 @@
 
 将解析好的文件保存进数据库，对象数据库采用minio
 
+## 安装
+
+```sh
+yarn add @mmstudio/an000043 anylogger @mmstudio/config
+```
+
 ## 配置文件
 
 mm.json
