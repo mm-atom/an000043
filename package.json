@@ -50,7 +50,7 @@
 	},
 	"devDependencies": {
 		"@mmstudio/config": "latest",
-		"@types/minio": "^7.0.6",
+		"@types/minio": "latest",
 		"@typescript-eslint/eslint-plugin": "latest",
 		"@typescript-eslint/parser": "latest",
 		"anylogger": "latest",
