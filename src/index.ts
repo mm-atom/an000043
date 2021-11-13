@@ -19,12 +19,12 @@ export interface IFileDoc<M> {
 	meta: M;
 }
 
-interface IFile<M = Record<string, unknown>> extends IFileBase {
+interface IFile<M = Record<string, unknown>, N = Record<string, string[]>> extends IFileBase<N> {
 	id?: string;
 	meta: M;
 }
 
-export default async function up<M = Record<string, unknown>>(files: IFile<M>[]) {
+export default async function up<M = Record<string, unknown>, N = Record<string, string[]>>(files: IFile<M, N>[]) {
 	if (!(await client.bucketExists(NAME_SPACE))) {
 		await client.makeBucket(NAME_SPACE, minio.region || 'cn-north-1');
 	}
