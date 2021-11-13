@@ -11,12 +11,13 @@ const minio = config.minio as ClientOptions;
 const client = new Client(minio);
 const NAME_SPACE = 'mmstudio';
 
-export interface IFileDoc<M> {
+export interface IFileDoc<M, N> {
 	id: string;
 	contentType: string;
 	name: string;
 	md5: string;
 	meta: M;
+	fields: N;
 }
 
 interface IFile<M = Record<string, unknown>, N = Record<string, string[]>> extends IFileBase<N> {
@@ -31,6 +32,7 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 	return Promise.all(files.map(async (file) => {
 		const meta = {
 			...file.meta,
+			fields: file.fields,
 			'content-type': file.type,
 			originialfilename: encodeURIComponent(file.name),
 		};
@@ -51,8 +53,9 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 				contentType: file.type,
 				id,
 				md5,
+				fields: file.fields,
 				name: file.name,
-			} as IFileDoc<typeof meta>;
+			} as IFileDoc<typeof meta, N>;
 			void fs.unlink(file.path);
 			return doc;
 		}
