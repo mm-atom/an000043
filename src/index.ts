@@ -51,7 +51,7 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 				}
 				const ext = extname(file.name);
 				if (ext) {
-					return `${uuid()}.${ext}`;
+					return `${uuid()}${ext}`;
 				}
 				const id = uuid();
 				// 文件名中无后缀名
