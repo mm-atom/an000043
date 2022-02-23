@@ -123,7 +123,8 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 						return id;
 				}
 			})();
-			const md5 = await client.fPutObject(NAME_SPACE, id, file.path, meta);
+			const info = await client.fPutObject(NAME_SPACE, id, file.path, meta);
+			const md5 = info.etag;
 			const doc = {
 				meta,
 				contentType: file.type,
