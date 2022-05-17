@@ -47,7 +47,7 @@
 	"dependencies": {
 		"@mmstudio/an000008": "^1.0.202004170754",
 		"@mmstudio/an000041": "^2.0.0",
-		"minio": "^7.0.26"
+		"minio": "^7.0.28"
 	},
 	"peerDependencies": {
 		"@mmstudio/config": "*",

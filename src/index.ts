@@ -49,6 +49,14 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 				if (file.id) {
 					return file.id;
 				}
+				if (file.fields) {
+					const id = (file.fields as unknown as {
+						id: string;
+					}).id;
+					if (id && typeof id === 'string') {
+						return id;
+					}
+				}
 				const ext = extname(file.name);
 				if (ext) {
 					return `${uuid()}${ext}`;
