@@ -2,15 +2,13 @@ import { promises as fs } from 'fs';
 import { extname } from 'path';
 import anylogger from 'anylogger';
 import { Client, ClientOptions } from 'minio';
-import config from '@mmstudio/config';
 import uuid from '@mmstudio/an000008';
 import { IFile as IFileBase } from '@mmstudio/an000041';
+import an61 from '@mmstudio/an000061';
 
 const logger = anylogger('@mmstudio/an000043');
 
-const minio = config.minio as ClientOptions;
-const client = new Client(minio);
-const NAME_SPACE = 'mmstudio';
+let gClient: Client;
 
 export interface IFileDoc<M, N> {
 	id: string;
@@ -26,9 +24,10 @@ interface IFile<M = Record<string, unknown>, N = Record<string, string[]>> exten
 	meta: M;
 }
 
-export default async function up<M = Record<string, unknown>, N = Record<string, string[]>>(files: IFile<M, N>[]) {
-	if (!(await client.bucketExists(NAME_SPACE))) {
-		await client.makeBucket(NAME_SPACE, minio.region || 'cn-north-1');
+export default async function up<M = Record<string, unknown>, N = Record<string, string[]>>(files: IFile<M, N>[], secret: boolean) {
+	const client = getClient();
+	if (!(await client.bucketExists(getNameSpace()))) {
+		await client.makeBucket(getNameSpace(), getConfig().region || 'cn-north-1');
 	}
 	return Promise.all(files.map(async (file) => {
 		const meta = {
@@ -39,7 +38,7 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 		};
 		if (file.id) {
 			try {
-				await client.removeObject(NAME_SPACE, file.id);
+				await client.removeObject(getNameSpace(), file.id);
 			} catch {
 				// file may not exist. ignore
 			}
@@ -131,7 +130,11 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 						return id;
 				}
 			})();
-			const info = await client.fPutObject(NAME_SPACE, id, file.path, meta);
+			if (secret) {
+				const buf = await fs.readFile(file.path);
+				await fs.writeFile(file.path, an61.encrypt(buf));
+			}
+			const info = await client.fPutObject(getNameSpace(), id, file.path, meta);
 			const md5 = info.etag;
 			const doc = {
 				meta,
@@ -147,4 +150,23 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 		logger.error('Could not read file from file system:');
 		throw new Error('Could not read file.');
 	}));
+}
+
+function getClient() {
+	if (!gClient) {
+		gClient = new Client(getConfig());
+	}
+	return gClient;
+}
+
+function getNameSpace() {
+	return process.env.MINIO_NAME_SPACE || 'mmstudio';
+}
+
+let gConfig: ClientOptions;
+function getConfig() {
+	if (!gConfig) {
+		gConfig = JSON.parse(process.env.MINIO_CONFIG!) as ClientOptions;
+	}
+	return gConfig;
 }
