@@ -26,8 +26,9 @@ interface IFile<M = Record<string, unknown>, N = Record<string, string[]>> exten
 
 export default async function up<M = Record<string, unknown>, N = Record<string, string[]>>(files: IFile<M, N>[], secret: boolean) {
 	const client = getClient();
-	if (!(await client.bucketExists(getNameSpace()))) {
-		await client.makeBucket(getNameSpace(), getConfig().region || 'cn-north-1');
+	const namespace = getNameSpace();
+	if (!(await client.bucketExists(namespace))) {
+		await client.makeBucket(namespace, getConfig().region || 'cn-north-1');
 	}
 	return Promise.all(files.map(async (file) => {
 		const meta = {
@@ -38,7 +39,7 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 		};
 		if (file.id) {
 			try {
-				await client.removeObject(getNameSpace(), file.id);
+				await client.removeObject(namespace, file.id);
 			} catch {
 				// file may not exist. ignore
 			}
@@ -134,7 +135,7 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 				const buf = await fs.readFile(file.path);
 				await fs.writeFile(file.path, an61.encrypt(buf));
 			}
-			const info = await client.fPutObject(getNameSpace(), id, file.path, meta);
+			const info = await client.fPutObject(namespace, id, file.path, meta);
 			const md5 = info.etag;
 			const doc = {
 				meta,
