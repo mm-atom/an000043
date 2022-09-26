@@ -1,6 +1,6 @@
 {
 	"name": "@mmstudio/an000043",
-	"version": "3.0.2",
+	"version": "3.0.3",
 	"description": "保存文件到数据库",
 	"scripts": {
 		"test": "tsc && ava ./tests/*.js",
