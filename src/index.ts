@@ -24,7 +24,7 @@ interface IFile<M = Record<string, unknown>, N = Record<string, string[]>> exten
 	meta: M;
 }
 
-export default async function up<M = Record<string, unknown>, N = Record<string, string[]>>(files: IFile<M, N>[], secret: boolean) {
+export default async function up<M = Record<string, unknown>, N = Record<string, string[]>>(files: IFile<M, N>[], encrypt: boolean) {
 	const client = getClient();
 	const namespace = getNameSpace();
 	if (!(await client.bucketExists(namespace))) {
@@ -131,7 +131,7 @@ export default async function up<M = Record<string, unknown>, N = Record<string,
 						return id;
 				}
 			})();
-			if (secret) {
+			if (encrypt) {
 				const buf = await fs.readFile(file.path);
 				await fs.writeFile(file.path, an61.encrypt(buf));
 			}
