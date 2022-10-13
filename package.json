@@ -48,7 +48,7 @@
 		"@mmstudio/an000008": "^1.0.202004170754",
 		"@mmstudio/an000041": "^2.0.0",
 		"@mmstudio/an000061": "^2.0.2",
-		"minio": "^7.0.28"
+		"minio": "^7.0.32"
 	},
 	"peerDependencies": {
 		"@next/env": "*",
